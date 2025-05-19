@@ -44,7 +44,10 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', f'{DEFAULT_HOSTS},{RAILWAY_HOSTS
 # CSRF settings
 CSRF_COOKIE_SECURE = not DEBUG  # Only send cookie over HTTPS in production
 CSRF_COOKIE_SAMESITE = 'Lax'  # Protect against CSRF attacks
-CSRF_TRUSTED_ORIGINS = [f'https://{host}' for host in ALLOWED_HOSTS if host != 'localhost' and host != '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = [
+    'https://news-app-proj-production.up.railway.app',
+    'https://*.railway.app'
+]
 
 
 # Application definition
