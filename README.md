@@ -126,7 +126,3 @@ DATABASE_URL=postgres://username:password@hostname:port/database_name
 - Media files are stored in the `/media` directory
 - For production, consider using a managed database service
 - For improved performance, add a CDN for static files
-
-## License
-
-© {% now "Y" %} Copyright - Майборода Максим Валерійович 
