@@ -94,7 +94,7 @@
 
 <div class="card-container">
     <div class="auth-container">
-        <form id="login-form" class="form" action="" method="post">
+        <form id="login-form" class="form" action="{% url 'login' %}" method="post">
             {% csrf_token %}
             <h2 class="text-center title-gradient">Увійти в систему</h2>
             

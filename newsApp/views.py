@@ -1,15 +1,21 @@
 from django import forms
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render
 from django.views import generic
 from django.views.generic import ListView
 from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.exceptions import PermissionDenied
+import logging
 
 from django.db.models import F
 
 from newsApp.models import Comment, Like, NewsPost, Ip
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 
@@ -57,6 +63,47 @@ class IndexView(ListView):
     paginate_by = 5
     template_name = "newsApp/index.html"
     ordering = ['-id']  # Show newest posts first
+    context_object_name = 'page_obj'
+
+    def get_queryset(self):
+        try:
+            queryset = super().get_queryset()
+            return queryset.order_by(*self.ordering)
+        except Exception as e:
+            logger.error(f"Error in get_queryset: {str(e)}")
+            return NewsPost.objects.none()
+
+    def get_context_data(self, **kwargs):
+        try:
+            context = super().get_context_data(**kwargs)
+            return context
+        except Exception as e:
+            logger.error(f"Error in get_context_data: {str(e)}")
+            raise Http404("Error loading page data")
+
+    def get_paginate_by(self, queryset):
+        try:
+            page = self.request.GET.get('page', '1')
+            if not page.isdigit() or int(page) < 1:
+                logger.warning(f"Invalid page number requested: {page}")
+                return self.paginate_by
+            return self.paginate_by
+        except Exception as e:
+            logger.error(f"Error in get_paginate_by: {str(e)}")
+            return self.paginate_by
+
+    def paginate_queryset(self, queryset, page_size):
+        try:
+            return super().paginate_queryset(queryset, page_size)
+        except EmptyPage:
+            logger.warning("Empty page requested")
+            raise Http404("Page not found")
+        except PageNotAnInteger:
+            logger.warning("Invalid page number format")
+            raise Http404("Invalid page number")
+        except Exception as e:
+            logger.error(f"Error in paginate_queryset: {str(e)}")
+            raise Http404("Error loading page")
 
 
 def about_view(request):

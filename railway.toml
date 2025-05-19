@@ -9,6 +9,7 @@ healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 
+# Triggering new deployment to run migrations
 [deploy.env]
 PYTHONUNBUFFERED = "1"
 DJANGO_SETTINGS_MODULE = "news.settings"

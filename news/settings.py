@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,9 +25,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-2!v@opa*kvnkkrvo*e!ta@a=3vj87x7qg@8xuj6x9(g937_3)z')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+# Get the host from the environment variable, or use a default
+RAILWAY_HOST = os.environ.get('RAILWAY_STATIC_URL', '')
+if RAILWAY_HOST:
+    # Extract domain from Railway URL if present
+    parsed_url = urlparse(RAILWAY_HOST)
+    RAILWAY_DOMAIN = parsed_url.netloc
+else:
+    RAILWAY_DOMAIN = ''
+
+# Combine all allowed hosts
+DEFAULT_HOSTS = 'localhost,127.0.0.1'
+RAILWAY_HOSTS = f'.railway.app,{RAILWAY_DOMAIN}' if RAILWAY_DOMAIN else '.railway.app'
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', f'{DEFAULT_HOSTS},{RAILWAY_HOSTS}').split(',')
+
+# CSRF settings
+CSRF_COOKIE_SECURE = not DEBUG  # Only send cookie over HTTPS in production
+CSRF_COOKIE_SAMESITE = 'Lax'  # Protect against CSRF attacks
+CSRF_TRUSTED_ORIGINS = [f'https://{host}' for host in ALLOWED_HOSTS if host != 'localhost' and host != '127.0.0.1']
 
 
 # Application definition
@@ -47,6 +65,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',  # Temporarily disabled
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -134,8 +153,64 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Development settings
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'newsApp', 'static'),
+    ]
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    MIDDLEWARE = [
+        'django.middleware.security.SecurityMiddleware',
+        'whitenoise.middleware.WhiteNoiseMiddleware',
+    ] + [m for m in MIDDLEWARE if m != 'whitenoise.middleware.WhiteNoiseMiddleware']
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '[{levelname}] {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'newsApp': {
+            'handlers': ['console'],
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'gunicorn': {
+            'handlers': ['console'],
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

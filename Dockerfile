@@ -6,6 +6,9 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PORT 8000
+ENV DJANGO_SETTINGS_MODULE=news.settings
+ENV PYTHONPATH=/app
+ENV DJANGO_LOG_LEVEL=INFO
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -13,28 +16,39 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Create a non-root user and necessary directories
+RUN useradd -m appuser && \
+    mkdir -p /app/staticfiles /app/media /app/logs && \
+    chown -R appuser:appuser /app
+
 # Install Python dependencies
-COPY requirements.txt .
+COPY --chown=appuser:appuser requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
-COPY . .
+# Copy project files
+COPY --chown=appuser:appuser . .
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
-
-# Create a non-root user
-RUN useradd -m appuser && chown -R appuser:appuser /app
-USER appuser
+# Set proper permissions
+RUN chown -R appuser:appuser /app && \
+    chmod -R 755 /app && \
+    chmod -R 777 /app/logs
 
 # Create startup script
-COPY <<EOF /app/start.sh
-#!/bin/bash
-python manage.py migrate
-gunicorn news.wsgi:application --bind 0.0.0.0:\$PORT --workers 2 --threads 2
-EOF
+RUN echo '#!/bin/bash\n\
+echo "Checking database connection..."\n\
+python manage.py check --database default\n\
+echo "Running migrations..."\n\
+python manage.py showmigrations\n\
+python manage.py migrate --noinput --verbosity 3\n\
+echo "Collecting static files..."\n\
+python manage.py collectstatic --noinput\n\
+echo "Starting Gunicorn..."\n\
+gunicorn news.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 2 --log-level info --access-logfile - --error-logfile -' > /app/start.sh && \
+    chmod +x /app/start.sh && \
+    chown appuser:appuser /app/start.sh
 
-RUN chmod +x /app/start.sh
+# Switch to non-root user
+USER appuser
 
 # Expose port
 EXPOSE $PORT
