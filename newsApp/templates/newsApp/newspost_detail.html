@@ -111,8 +111,9 @@
 </div>
 
 <script>
-  document.getElementById("share-twitt").href = "https://twitter.com/intent/tweet?text=%20http%3A//127.0.0.1%3A8000/post/" + "{{ post.id }}" + "/";
-  document.getElementById("share-fb").href = "https://www.facebook.com/sharer/sharer.php?u=http%3A//127.0.0.1%3A8000/post/" + "{{ post.id }}" + "/";
-  document.getElementById("share-tg").href = "https://t.me/share/url?url=" + "{{ post.title }}" + "&text=http%3A//127.0.0.1%3A8000/post/" + "{{ post.id }}" + "/";
+  var postUrl = "{{ request.scheme }}://{{ request.get_host }}{% url 'post-detail' post.id %}";
+  document.getElementById("share-twitt").href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(postUrl);
+  document.getElementById("share-fb").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(postUrl);
+  document.getElementById("share-tg").href = "https://t.me/share/url?url=" + encodeURIComponent(postUrl) + "&text={{ post.title|urlencode }}";
 </script>
 {% endblock %}
