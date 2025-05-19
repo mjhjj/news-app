@@ -1,0 +1,118 @@
+{% extends 'newsApp/base.html' %}
+{% load static %}
+{% load social_share %}
+{% load tz %}
+
+{% block main %}
+<link href="{% static 'newsApp/newspost_detail.css' %}?v=1.0.2" rel="stylesheet" />
+
+<div class="content-container">
+  <div class="post-container">
+    <!-- Post Images Carousel -->
+    <div class="post-image-wrapper">
+      <div id="carouselExampleIndicators" class="carousel slide" data-mdb-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-mdb-target="#carouselExampleIndicators" data-mdb-slide-to="0" class="active"
+            aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-mdb-target="#carouselExampleIndicators" data-mdb-slide-to="1"
+            aria-label="Slide 2"></button>
+          <button type="button" data-mdb-target="#carouselExampleIndicators" data-mdb-slide-to="2"
+            aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="https://mdbcdn.b-cdn.net/img/new/slides/041.webp" class="d-block w-100" alt="Property Image" />
+          </div>
+          <div class="carousel-item">
+            <img src="https://mdbcdn.b-cdn.net/img/new/slides/042.webp" class="d-block w-100" alt="Property Image" />
+          </div>
+          <div class="carousel-item">
+            <img src="https://mdbcdn.b-cdn.net/img/new/slides/043.webp" class="d-block w-100" alt="Property Image" />
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-mdb-target="#carouselExampleIndicators"
+          data-mdb-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-mdb-target="#carouselExampleIndicators"
+          data-mdb-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Post Content -->
+    <div class="post-wrapper">
+      <h1 class="post-title">{{ post.title }}</h1>
+      <div class="post-content">{{ post.text|safe|linebreaks }}</div>
+    </div>
+
+    <!-- Stats and Share Bar -->
+    <div class="post-meta-bar">
+      <div class="post-stats">
+        <div class="post-stat">
+          <i class="far fa-eye"></i> {{ post.total_views }}
+        </div>
+        {% if liked %}
+          <a href="{% url 'post-like' post.id %}" class="post-stat liked">
+            <i class="fas fa-heart"></i> {{ post.likes }}
+          </a>
+        {% else %}
+          <a href="{% url 'post-like' post.id %}" class="post-stat">
+            <i class="far fa-heart"></i> {{ post.likes }}
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="share-bar">
+        <div class="share-title">Поділитися:</div>
+        <div class="share-buttons">
+          <a href="#" id="share-fb" class="share-btn facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" id="share-twitt" class="share-btn twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" id="share-tg" class="share-btn telegram">
+            <i class="fab fa-telegram-plane"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+      <div class="comments-header">
+        <h2 class="comments-title">Коментарі</h2>
+        <span class="comment-count">{{ post.commentaries_count }}</span>
+      </div>
+      
+      <div class="comments-body">
+        <a class="btn btn-primary add-comment-btn" href="{% url 'comment-post' post.pk %}">Залишити коментар</a>
+        
+        {% if post.commentaries_count > 0 %}
+          {% for c in commentaries %}
+            <div class="comment-item">
+              <div class="comment-header">
+                <span class="comment-author">{{ c.reporter }}</span>
+                <span class="comment-time">{{ c.time|date:'Y-m-d H:i' }}</span>
+              </div>
+              <div class="comment-text">{{ c.comment|safe|linebreaks }}</div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="no-comments">Немає коментарів. Будьте першим, хто залишить коментар!</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("share-twitt").href = "https://twitter.com/intent/tweet?text=%20http%3A//127.0.0.1%3A8000/post/" + "{{ post.id }}" + "/";
+  document.getElementById("share-fb").href = "https://www.facebook.com/sharer/sharer.php?u=http%3A//127.0.0.1%3A8000/post/" + "{{ post.id }}" + "/";
+  document.getElementById("share-tg").href = "https://t.me/share/url?url=" + "{{ post.title }}" + "&text=http%3A//127.0.0.1%3A8000/post/" + "{{ post.id }}" + "/";
+</script>
+{% endblock %}

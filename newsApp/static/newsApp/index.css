@@ -1,0 +1,112 @@
+/* Modern Index Page Styles */
+.posts-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.news-post {
+  width: 100%;
+  margin-bottom: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.news-post:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.news-post .card-img-top {
+  height: 240px;
+  object-fit: cover;
+}
+
+.news-post .card-title {
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+}
+
+.news-post .card-text {
+  color: #555;
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+}
+
+.news-post .card-body {
+  padding: 1.5rem;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-left: 1rem;
+}
+
+.meta-item i {
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.pagination {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.pagination .page-link {
+  border-radius: 50px;
+  margin: 0 3px;
+  border: none;
+  color: #3498db;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #2980b9;
+}
+
+.pagination .page-item.active .page-link {
+  background: linear-gradient(45deg, #3498db, #2980b9);
+  color: white;
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #95a5a6;
+  background-color: transparent;
+}
+
+@media (max-width: 767px) {
+  .news-post .card-img-top {
+    height: 180px;
+  }
+}
+
+/* На верхнем уровне кода */
+@media screen and (max-width: 991px) {
+  .news-post {
+    width: 92%;
+  }
+}

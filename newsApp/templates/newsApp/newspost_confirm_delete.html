@@ -1,0 +1,38 @@
+{% extends 'newsApp/base.html' %}
+{% load static %}
+
+{% block main %}
+<style>
+  .no-animation {
+    transition: none !important;
+  }
+  
+  .no-animation:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-md) !important;
+  }
+</style>
+
+<div class="content-container">
+  <h1 class="page-title">Підтвердження видалення</h1>
+  
+  <div class="card no-animation">
+    <div class="card-body text-center">
+      <div class="mb-4">
+        <i class="fas fa-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+      </div>
+      
+      <h3 class="mb-3">Ви впевнені, що хочете видалити цю статтю?</h3>
+      <p class="mb-4">Ця дія не може бути скасована, і вся інформація, пов'язана з цією статтею, буде видалена.</p>
+      
+      <form method="post">
+        {% csrf_token %}
+        <div class="d-flex justify-content-center">
+          <button type="submit" class="btn btn-danger px-4 me-3">Видалити</button>
+          <a href="javascript:history.back()" class="btn btn-outline-secondary px-4">Скасувати</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

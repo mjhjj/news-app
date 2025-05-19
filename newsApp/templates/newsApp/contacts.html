@@ -1,0 +1,83 @@
+{% extends 'newsApp/base.html' %}
+{% load static %}
+
+{% block main %}
+<style>
+  .contact-list {
+    margin-top: 1.5rem;
+  }
+  
+  .contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .contact-item i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-right: 1rem;
+    width: 2rem;
+    text-align: center;
+  }
+  
+  .contact-item a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  
+  .contact-item a:hover {
+    color: var(--primary-color);
+  }
+  
+  .contact-label {
+    font-weight: 500;
+    width: 180px;
+    color: var(--secondary-color);
+  }
+  
+  .no-animation {
+    transition: none !important;
+  }
+  
+  .no-animation:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-md) !important;
+  }
+</style>
+
+<div class="content-container">
+  <h1 class="page-title">Контакти</h1>
+  
+  <div class="card no-animation">
+    <div class="card-body">
+      <p>Якщо у вас виникли питання або пропозиції щодо співпраці, будь ласка, зв'яжіться з нами одним із наступних способів:</p>
+      
+      <div class="contact-list">
+        <div class="contact-item">
+          <i class="far fa-envelope"></i>
+          <span class="contact-label">Електронна пошта:</span>
+          <a href="mailto:Max.may48@gmail.com">Max.may48@gmail.com</a>
+        </div>
+        
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span class="contact-label">Мобільний телефон:</span>
+          <a href="tel:+380951675988">+380 95 167 59 88</a>
+        </div>
+        
+        <div class="contact-item">
+          <i class="fab fa-telegram-plane"></i>
+          <span class="contact-label">Телеграм:</span>
+          <a href="https://t.me/Busanchik228">@Busanchik228</a>
+        </div>
+      </div>
+      
+      <div class="mt-4 pt-3 border-top">
+        <p class="mb-0">Наша адреса для кореспонденції: м. Полтава, вул. Європейська, 5</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

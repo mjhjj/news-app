@@ -1,0 +1,81 @@
+{% extends 'newsApp/base.html' %}
+{% load filters %}
+
+{% block main %}
+<style>
+  .profile-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .profile-username {
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+  }
+  
+  .article-item {
+    border-bottom: 1px solid #eee;
+    padding: 1.5rem 0;
+  }
+  
+  .article-item:last-child {
+    border-bottom: none;
+  }
+  
+  .article-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .no-animation {
+    transition: none !important;
+  }
+  
+  .no-animation:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-md) !important;
+  }
+  
+  .create-article-btn {
+    margin-bottom: 1.5rem;
+  }
+</style>
+
+<div class="content-container">
+  <div class="profile-header">
+    <h1 class="page-title">Профіль користувача</h1>
+    <h4 class="profile-username">{{ user.username }}</h4>
+  </div>
+
+  {% if request.user|has_group:"Reporter" %}
+  <div class="card no-animation">
+    <div class="card-body">
+      <a class="btn btn-primary create-article-btn" href="{% url 'create-post' %}">Створити нову статтю</a>
+      
+      {% if articles %}
+        {% for a in articles %}
+        <div class="article-item">
+          <h5 class="article-title">{{ a }}</h5>
+          <div class="action-buttons">
+            <a class="btn btn-warning" href="{% url 'edit-post' a.pk %}">Редагувати статтю</a>
+            <a class="btn btn-danger" href="{% url 'delete-post' a.pk %}">Видалити статтю</a>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center text-muted mt-4">
+          <p>У вас поки немає опублікованих статей</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

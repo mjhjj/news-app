@@ -1,0 +1,119 @@
+{% extends 'registration/base_auth.html' %}
+{% block title %}Вихід{% endblock %}
+{% block main %}
+<style>
+    .logout-container {
+        max-width: 450px;
+        margin: 0 auto;
+        padding: 2rem;
+        border-radius: 12px;
+        background-color: white;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+    
+    .title-gradient {
+        background: linear-gradient(45deg, #3498db, #2c3e50);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+    
+    .logout-btn {
+        background: linear-gradient(45deg, #e74c3c, #c0392b);
+        border: none;
+        padding: 12px 24px;
+        border-radius: 50px;
+        color: white;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 1rem;
+    }
+    
+    .logout-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+    }
+    
+    .home-link {
+        display: inline-block;
+        margin-top: 1.5rem;
+        color: #3498db;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+    
+    .home-link:hover {
+        color: #2980b9;
+        text-decoration: underline;
+    }
+    
+    .login-btn {
+        background: linear-gradient(45deg, #3498db, #2980b9);
+        border: none;
+        padding: 12px 24px;
+        border-radius: 50px;
+        color: white;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-decoration: none;
+        text-align: center;
+        margin-top: 1rem;
+    }
+    
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        color: white;
+    }
+    
+    .user-greeting {
+        font-size: 18px;
+        margin-bottom: 1.5rem;
+        color: #34495e;
+    }
+    
+    .username {
+        font-weight: 700;
+        color: #3498db;
+    }
+    
+    .card-container {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+</style>
+
+<div class="card-container">
+    <div class="logout-container">
+        {% if user.is_authenticated %}
+        <form id="logout-form" class="form" action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <h2 class="text-center title-gradient">Вихід з системи</h2>
+            <div class="user-greeting">
+                <span class="username">{{ user.username }}</span>, ви впевнені що хочете вийти з системи?
+            </div>
+            <button type="submit" class="logout-btn">Вийти</button>
+            <div class="text-center">
+                <a href="{% url 'index' %}" class="home-link">Повернутися на головну</a>
+            </div>
+        </form>
+        {% else %}
+        <h2 class="text-center title-gradient">Сесія не активна</h2>
+        <div class="user-greeting">
+            Здається, ви не увійшли в систему
+        </div>
+        <a href="{% url 'login' %}" class="login-btn">Увійти</a>
+        <div class="text-center">
+            <a href="{% url 'index' %}" class="home-link">Повернутися на головну</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

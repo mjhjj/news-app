@@ -1,0 +1,84 @@
+{% extends 'newsApp/base.html' %}
+{% load static %}
+
+{% block main %}
+<link href="{% static 'newsApp/index.css' %}?v=1.0.2" rel="stylesheet" />
+
+<div class="content-container">
+  <h1 class="page-title">Останні новини</h1>
+  
+  <div class="posts-container">
+    {% for post in page_obj %}
+    <div class="card news-post">
+      <img
+        src="https://is1-2.housingcdn.com/4f2250e8/73b4c8375352d2558cc55aeb0bb7f937/v0/fs/devi_shanmuga_flats-surappattu-chennai-devi_flat_promoters.jpeg"
+        class="card-img-top" alt="Property image">
+      <div class="card-body">
+        <h5 class="card-title">{{ post.title }}</h5>
+        <p class="card-text">{{ post.description }}</p>
+        
+        <div class="action-row">
+          <a href="{% url 'post-detail' post.id %}" class="btn btn-primary">Перейти до перегляду</a>
+          
+          <div class="post-meta">
+            <div class="meta-item">
+              <i class="far fa-heart"></i>
+              {{ post.likes }}
+            </div>
+            <div class="meta-item">
+              <i class="far fa-eye"></i>
+              {{ post.total_views }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Попередня</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Попередня</a>
+        </li>
+        {% endif %}
+  
+        {% if page_obj.number|add:'-4' > 1 %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'-5' }}">&hellip;</a></li>
+        {% endif %}
+  
+        {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+        <li class="page-item active" aria-current="page">
+          <span class="page-link">
+            {{ i }}
+          </span>
+        </li>
+        {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %} <li class="page-item"><a class="page-link"
+            href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+          {% endfor %}
+  
+          {% if page_obj.paginator.num_pages > page_obj.number|add:'4' %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'5' }}">&hellip;</a></li>
+          {% endif %}
+  
+          {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Наступна</a>
+          </li>
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="True">Наступна</a>
+          </li>
+          {% endif %}
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}
