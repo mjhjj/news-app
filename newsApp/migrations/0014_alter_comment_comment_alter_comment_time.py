@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('newsApp', '0013_comment_time'),
+        ("newsApp", "0013_comment_time"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='comment',
-            name='comment',
-            field=models.TextField(verbose_name='Коментар'),
+            model_name="comment",
+            name="comment",
+            field=models.TextField(verbose_name="Коментар"),
         ),
         migrations.AlterField(
-            model_name='comment',
-            name='time',
-            field=models.DateTimeField(auto_now=True, verbose_name='Час'),
+            model_name="comment",
+            name="time",
+            field=models.DateTimeField(auto_now=True, verbose_name="Час"),
         ),
     ]

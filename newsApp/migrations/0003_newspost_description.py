@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('newsApp', '0002_newspost_likes'),
+        ("newsApp", "0002_newspost_likes"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='newspost',
-            name='description',
-            field=models.CharField(default='', max_length=1024, verbose_name='Опис'),
+            model_name="newspost",
+            name="description",
+            field=models.CharField(default="", max_length=1024, verbose_name="Опис"),
         ),
     ]

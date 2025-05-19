@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('newsApp', '0011_remove_comment_post_newspost_comments_and_more'),
+        ("newsApp", "0011_remove_comment_post_newspost_comments_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='newspost',
-            name='comments',
-            field=models.ManyToManyField(blank=True, related_name='post_comment', to='newsApp.Comment', verbose_name='Коментарі'),
+            model_name="newspost",
+            name="comments",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="post_comment",
+                to="newsApp.Comment",
+                verbose_name="Коментарі",
+            ),
         ),
     ]

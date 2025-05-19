@@ -23,12 +23,12 @@ logger = logging.getLogger(__name__)
 
 
 def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
     if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
+        ip = x_forwarded_for.split(",")[0]
     else:
         # В REMOTE_ADDR значение айпи пользователя
-        ip = request.META.get('REMOTE_ADDR')
+        ip = request.META.get("REMOTE_ADDR")
     return ip
 
 
@@ -51,19 +51,19 @@ def post_view(request, id):
             liked = True
 
     context = {
-        'post': post,
-        'commentaries': post.comments.all().order_by('-time'),
-        'liked': liked
+        "post": post,
+        "commentaries": post.comments.all().order_by("-time"),
+        "liked": liked,
     }
-    return render(request, 'newsApp/newspost_detail.html', context)
+    return render(request, "newsApp/newspost_detail.html", context)
 
 
 class IndexView(ListView):
     model = NewsPost
     paginate_by = 5
     template_name = "newsApp/index.html"
-    ordering = ['-id']  # Show newest posts first
-    context_object_name = 'page_obj'
+    ordering = ["-id"]  # Show newest posts first
+    context_object_name = "page_obj"
 
     def get_queryset(self):
         try:
@@ -83,7 +83,7 @@ class IndexView(ListView):
 
     def get_paginate_by(self, queryset):
         try:
-            page = self.request.GET.get('page', '1')
+            page = self.request.GET.get("page", "1")
             if not page.isdigit() or int(page) < 1:
                 logger.warning(f"Invalid page number requested: {page}")
                 return self.paginate_by
@@ -107,11 +107,11 @@ class IndexView(ListView):
 
 
 def about_view(request):
-    return render(request, 'newsApp/about.html')
+    return render(request, "newsApp/about.html")
 
 
 def contacts_view(request):
-    return render(request, 'newsApp/contacts.html')
+    return render(request, "newsApp/contacts.html")
 
 
 @login_required
@@ -120,19 +120,19 @@ def like_post(request, post_id):
         return
     post = NewsPost.objects.filter(id=post_id)
     if len(post) != 1:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
     post = post[0]
     like = Like.objects.filter(post=post, reporter=request.user)
     if len(like) != 1:
         new_like = Like(reporter=request.user, post=post)
         new_like.save()
-        NewsPost.objects.filter(id=post_id).update(likes=F('likes') + 1)
-        return HttpResponseRedirect(reverse('post-detail', args=[post_id]) + "#like")
+        NewsPost.objects.filter(id=post_id).update(likes=F("likes") + 1)
+        return HttpResponseRedirect(reverse("post-detail", args=[post_id]) + "#like")
     else:
         like.delete()
-        NewsPost.objects.filter(id=post_id).update(likes=F('likes') - 1)
+        NewsPost.objects.filter(id=post_id).update(likes=F("likes") - 1)
 
-    return HttpResponseRedirect(reverse('post-detail', args=[post_id]) + "#like")
+    return HttpResponseRedirect(reverse("post-detail", args=[post_id]) + "#like")
 
 
 class NewsPostForm(forms.ModelForm):
@@ -140,7 +140,7 @@ class NewsPostForm(forms.ModelForm):
         model = NewsPost
         # user will be set in views.ResumeNew
         # other fields will be set as model default
-        exclude = ('likes', 'reporter', 'views', 'comments')
+        exclude = ("likes", "reporter", "views", "comments")
 
 
 class CommentPostForm(forms.ModelForm):
@@ -148,12 +148,12 @@ class CommentPostForm(forms.ModelForm):
         model = Comment
         # user will be set in views.ResumeNew
         # other fields will be set as model default
-        exclude = ('reporter',)
+        exclude = ("reporter",)
 
 
 def project_comment_view(request, pk):
     obj = Comment
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CommentPostForm(request.POST)
         form.instance.project = obj
         if form.is_valid():
@@ -163,24 +163,24 @@ def project_comment_view(request, pk):
 
             post = NewsPost.objects.get(pk=pk)
             post.comments.add(com.pk)
-            return redirect('post-detail', pk)
+            return redirect("post-detail", pk)
     else:
         form = CommentPostForm()
     context = {
-        'form': form,
-        'object': obj,
+        "form": form,
+        "object": obj,
     }
-    return render(request, 'newsApp/comment_form.html', context)
+    return render(request, "newsApp/comment_form.html", context)
 
 
 class NewsPostCreate(generic.CreateView):
     model = NewsPost
     form_class = NewsPostForm
-    success_url = reverse_lazy('profile')
+    success_url = reverse_lazy("profile")
 
     def get_initial(self):
         initial = super(NewsPostCreate, self).get_initial()
-        initial.update({'reporter_id': self.request.user.id})
+        initial.update({"reporter_id": self.request.user.id})
         return initial
 
     def form_valid(self, form):
@@ -194,11 +194,11 @@ class NewsPostCreate(generic.CreateView):
 
 class NewsPostEdit(generic.UpdateView):
     model = NewsPost
-    fields = ['title', 'description', 'text']
-    success_url = reverse_lazy('profile')
-    template_name = 'newsApp/post_edit.html'
+    fields = ["title", "description", "text"]
+    success_url = reverse_lazy("profile")
+    template_name = "newsApp/post_edit.html"
 
 
 class NewsPostDelete(generic.DeleteView):
     model = NewsPost
-    success_url = reverse_lazy('profile')
+    success_url = reverse_lazy("profile")

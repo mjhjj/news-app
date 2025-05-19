@@ -9,32 +9,43 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('newsApp', '0009_remove_like_post_remove_like_reporter_and_more'),
+        ("newsApp", "0009_remove_like_post_remove_like_reporter_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='like',
-            name='post',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='newsApp.newspost'),
+            model_name="like",
+            name="post",
+            field=models.ForeignKey(
+                default=0,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="newsApp.newspost",
+            ),
         ),
         migrations.AddField(
-            model_name='like',
-            name='reporter',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Автор'),
+            model_name="like",
+            name="reporter",
+            field=models.ForeignKey(
+                default=0,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Автор",
+            ),
         ),
         migrations.RemoveField(
-            model_name='newspost',
-            name='likes',
+            model_name="newspost",
+            name="likes",
         ),
         migrations.AddField(
-            model_name='newspost',
-            name='likes',
-            field=models.IntegerField(default=0, verbose_name='Кількість лайків'),
+            model_name="newspost",
+            name="likes",
+            field=models.IntegerField(default=0, verbose_name="Кількість лайків"),
         ),
         migrations.AlterField(
-            model_name='newspost',
-            name='views',
-            field=models.ManyToManyField(blank=True, related_name='post_views', to='newsApp.Ip'),
+            model_name="newspost",
+            name="views",
+            field=models.ManyToManyField(
+                blank=True, related_name="post_views", to="newsApp.Ip"
+            ),
         ),
     ]

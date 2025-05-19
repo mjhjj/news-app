@@ -7,14 +7,16 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('newsApp', '0012_alter_newspost_comments'),
+        ("newsApp", "0012_alter_newspost_comments"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='comment',
-            name='time',
-            field=models.DateTimeField(blank=True, default=django.utils.timezone.now, verbose_name='Час'),
+            model_name="comment",
+            name="time",
+            field=models.DateTimeField(
+                blank=True, default=django.utils.timezone.now, verbose_name="Час"
+            ),
             preserve_default=False,
         ),
     ]

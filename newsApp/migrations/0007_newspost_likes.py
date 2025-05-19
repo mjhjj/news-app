@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('newsApp', '0006_remove_like_comment'),
+        ("newsApp", "0006_remove_like_comment"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='newspost',
-            name='likes',
-            field=models.IntegerField(default=0, verbose_name='Кількість лайків'),
+            model_name="newspost",
+            name="likes",
+            field=models.IntegerField(default=0, verbose_name="Кількість лайків"),
         ),
     ]
