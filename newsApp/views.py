@@ -63,7 +63,7 @@ class IndexView(ListView):
     paginate_by = 5
     template_name = "newsApp/index.html"
     ordering = ["-id"]  # Show newest posts first
-    context_object_name = "page_obj"
+    context_object_name = "posts"
 
     def get_queryset(self):
         try:
