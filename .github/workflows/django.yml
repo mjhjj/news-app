@@ -9,6 +9,7 @@ on:
 env:
   RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
   RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+  DJANGO_SETTINGS_MODULE: news.settings
 
 jobs:
   test:
@@ -39,6 +40,7 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        cache: 'pip'
         
     - name: Install dependencies
       run: |
@@ -56,6 +58,7 @@ jobs:
         DATABASE_URL: postgres://test_user:test_password@localhost:5432/test_db
         SECRET_KEY: test-key-not-used-in-production
         DEBUG: "False"
+        DJANGO_SETTINGS_MODULE: news.settings
       run: |
         python manage.py test
         
@@ -76,10 +79,17 @@ jobs:
 
       - name: Login to Railway
         run: railway login
-
-      - name: Deploy to Railway
-        run: |
-          railway up --service news-app
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }} 
+
+      - name: Link to Railway Project
+        run: railway link ${{ secrets.RAILWAY_PROJECT_ID }}
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Deploy to Railway
+        run: railway up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_ENVIRONMENT: production 
