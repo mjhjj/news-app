@@ -12,11 +12,14 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  /* Зроблено картки новин напівпрозорими */
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 .news-post:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  /* Посилено тінь при наведенні для сучасного вигляду */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
 .news-post .card-img-top {

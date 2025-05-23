@@ -18,7 +18,8 @@
 }
 
 .post-wrapper {
-  background-color: white;
+  /* Зроблено контейнер прозорішим */
+  background-color: rgba(255, 255, 255, 0.88);
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -42,7 +43,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: white;
+  /* Зроблено контейнер прозорішим */
+  background-color: rgba(255, 255, 255, 0.88);
   padding: 1rem 1.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -132,7 +134,8 @@
 }
 
 .comments-section {
-  background-color: white;
+  /* Зроблено контейнер прозорішим */
+  background-color: rgba(255, 255, 255, 0.88);
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
@@ -145,7 +148,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  background-color: #f8f9fa;
+  /* Зроблено заголовок коментарів прозорішим */
+  background-color: rgba(248, 249, 250, 0.9);
   border-bottom: 1px solid #eee;
 }
 
